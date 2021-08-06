@@ -1,9 +1,10 @@
 package test
 
 import (
+	"log"
+	"net/http"
 	"os/exec"
 	"testing"
-	"time"
 
 	"github.com/gruntwork-io/terratest/modules/docker"
 	"github.com/stretchr/testify/assert"
@@ -27,8 +28,6 @@ func TestUnit(t *testing.T) {
 	So you need to check the binding volume with <func_name>_vol_data with "testunit_vol_data"
 	**/
 
-	t.Parallel()
-
 	dockerComposeFile := "./docker-compose.yml"
 
 	// Run the docker compose file
@@ -43,7 +42,6 @@ func TestUnit(t *testing.T) {
 
 	dbInstance := docker.Inspect(t, "db")
 	wordpressInstance := docker.Inspect(t, "wordpress")
-	time.Sleep(5 * time.Second)
 
 	/**
 		MySQL Database Container
@@ -104,8 +102,32 @@ func TestUnit(t *testing.T) {
 
 }
 
-func TestFunctionality(t *testing.T) {
+func TestFunctionalWordpress(t *testing.T) {
+	// TODO: Check functionality of Wordpress service
 
-	// TODO:
+	dockerComposeFile := "./docker-compose.yml"
+	docker.RunDockerCompose(
+		t,
+		&docker.Options{},
+		"-f",
+		dockerComposeFile,
+		"up",
+		"-d",
+	)
+
+	resp, err := http.Get("http://localhost:8000/")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	installUrl := resp.Request.URL.String()
+
+	// Redirect and check if go to install page, (200)
+	assert.Equal(t, installUrl, "http://localhost:8000/wp-admin/install.php")
+	assert.Equal(t, resp.StatusCode, 200)
+
+	defer resp.Body.Close()
+	defer docker.RunDockerComposeAndGetStdOut(t, &docker.Options{}, "-f", dockerComposeFile, "down")
 
 }
