@@ -44,11 +44,6 @@ func TestTerraformAWSEC2(t *testing.T) {
 
 	terraform.InitAndApply(t, terraformOptions)
 
-	/**
-		output "instance_id" {
-	  		value = module.ec2_instance_t2_micro.id
-		}
-	**/
 	// Output terraform instance_id
 	instanceID := terraform.Output(t, terraformOptions, "instance_id")
 

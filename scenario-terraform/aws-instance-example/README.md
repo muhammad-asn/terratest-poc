@@ -4,3 +4,9 @@
 2. Encapsulate configuration: Distinct logical components
 3. Re-use configuration: reduce time consuming and error prone by creating from scratch
 4. Consistency and best practice
+
+
+# Checklist
+- [x] EC2
+- [x] IAM
+- [] VPC

@@ -17,4 +17,8 @@ module "group_policy_ec2_all_role" {
     custom_group_policy_arns = [
         "arn:aws:iam::783095911817:policy/policy-ec2-all-role"
     ]
+
+    depends_on = [
+      module.policy_ec2_all_role
+    ]
 }

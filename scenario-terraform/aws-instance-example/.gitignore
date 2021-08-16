@@ -1,3 +1,5 @@
 *terraform*
 *.terraform*
-.env
+*.env
+*.json
+venv
